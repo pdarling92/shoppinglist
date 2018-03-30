@@ -1,35 +1,11 @@
-from flask import Flask, request
+from flask import Flask, request, make_response, redirect
 from flask import render_template
 import json
 import uuid
-
+from common import loadlist, savelist, returnindex, updateitem, validate_token
 
 app = Flask(__name__)
-
-
-def loadlist(filename,user):
-      data = json.load(open(filename))
-      filtered_data=list()
-      for i in data:
-	  if i['userid']==user:
-		  filtered_data.append(i.copy())	
-      return filtered_data
-	
-def savelist(filename, shoppinglist):
-	with open(filename, "w") as outfile:
-    		json.dump(shoppinglist, outfile, indent=4)
-
-def returnindex(shoppinglist,itemid):
-	for i,d in enumerate(shoppinglist):	
-		if d['id']==itemid:
-			return i
-	return None
-
-def updateitem(shoppinglist, itemid, newvalue):
-	i=returnindex(shoppinglist, itemid)
-	shoppinglist[i]['item']=newvalue
-	return shoppinglist
-		
+CLIENT_ID="322716948446-jjiki9vlg8j5rontfumc9o246es0c0da.apps.googleusercontent.com"
 			
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/list.html',methods=['GET', 'POST'])
@@ -39,6 +15,18 @@ def shoppinglist():
     edititem=None
 
     shoppinglist=loadlist('list.json',user['username'])
+
+    if 'session_token' in request.cookies:
+        print request.cookies['session_token']
+        print validate_token( request.cookies['session_token'],CLIENT_ID)
+	token, userid, username,  authorised = validate_token( request.cookies['session_token'],CLIENT_ID)
+    else:
+	print "not authenticated"
+	authorised=False
+
+    if not authorised:
+	return "<p>Access Denied</p><a href=\"/login.html\">Try again</a>"
+
 
     if request.method=='POST':
 	print request.form
@@ -60,8 +48,28 @@ def shoppinglist():
         edititem=request.args.get('itemid')
 
 
+    return render_template('list.html', title='Home', user=username, shoppinglist=shoppinglist, edititem=edititem)
 
 
-    return render_template('list.html', title='Home', user=user, shoppinglist=shoppinglist, edititem=edititem)
 
+@app.route('/login.html',methods=['GET', 'POST'])
+def login():
+
+
+    return render_template('login.html', title='Shopping List Login Page', user=None)
+
+
+@app.route('/authorise.html',methods=[ 'POST'])
+def authorise():
+    token=request.form['idtoken']
+#    token="x"
+    token, userid, username, authorised = validate_token(token, CLIENT_ID)
+
+    if authorised:
+        response = make_response(redirect('/list.html'))
+        response.set_cookie('session_token', token)
+        return response
+    else:
+
+        return "permission denied"
 
