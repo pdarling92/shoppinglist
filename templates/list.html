@@ -1,0 +1,54 @@
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }} - Shopping List</title>
+        {% else %}
+        <title>Welcome to Shopping List</title>
+        {% endif %}
+    </head>
+    <body>
+        <h1>Hi, {{ user.username }}.  Here is your shopping list!</h1>
+	<table>
+        {% for item in shoppinglist %}
+	{% if item.id == edititem %}
+        <tr>	
+	<td width=20 >
+        <form action="list.html" method="get">
+	<input type=text  id="updateitem" name="newitem"  value={{ item.item }} size=20 >
+        <input type=hidden id="updateitem" name="itemid" value={{ item.id }}>
+        <input type=hidden id="updateitem" name="action" value="update">
+        </td>
+	<td>
+        <button type="submit">Update</button>
+	</td>
+	</form>
+        <tr>
+	{% else %}
+	<tr>
+	<td width=160>
+        <div><p><b>{{ item.item }}</b></p></div>
+	</td>
+	<td>
+	<form action="list.html" method="get">
+        <input type=hidden id="deleteitem" name="itemid" value={{ item.id }}>
+	<input type=hidden id="deleteitem" name="action" value="delete">
+        <button type="submit">Delete</button>
+        </form>
+	</td>
+	<td>
+        <form action="list.html" method="get">
+        <input type=hidden id="edititem" name="itemid" value={{ item.id }}>
+        <input type=hidden id="edititem" name="action" value="edit">
+        <button type="submit">Edit</button>
+	</form>
+	</td>
+	</tr>
+	{% endif %}
+        {% endfor %}
+	</table>
+	<form action="list.html" method="post">
+	<input type=text id="newitem" name="newitem" placeholder="new item"/>
+	<button type="submit">Add</button>
+	</form>
+    </body>
+</html>
