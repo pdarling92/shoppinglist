@@ -1,8 +1,9 @@
+
 import json
 from google.oauth2 import id_token
 from google.auth.transport import requests
+import logging
 
-CLIENT_ID="322716948446-jjiki9vlg8j5rontfumc9o246es0c0da.apps.googleusercontent.com"
 
 def loadlist(filename,user):
       data = json.load(open(filename))
@@ -41,14 +42,22 @@ def validate_token(token, CLIENT_ID):
                 print idinfo
 
                 userid = idinfo['sub']
-		username = idinfo['given_name']
+                username = idinfo['given_name']
                 authorised=True
 
         except ValueError:
         # Invalid token
                 print "not authorised"
                 userid=None
-                pass
+                username=None
+                return idinfo 
 
         return token, userid, username, authorised
+
+
+#def validate_token(token, CLIENT_ID):
+#        authorised=False
+#        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+	
+ #       return idinfo
 

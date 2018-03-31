@@ -1,7 +1,7 @@
 <html>
     <head>
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
-	<meta name="google-signin-client_id" content="322716948446-jjiki9vlg8j5rontfumc9o246es0c0da.apps.googleusercontent.com">
+	<meta name="google-signin-client_id" content="915555552081-gat5pr89plv84pjhbr5f6ind991t95bl.apps.googleusercontent.com">
 
         {% if title %}
         <title>{{ title }} - Microblog</title>
@@ -33,7 +33,7 @@
 			console.log(id_token);
 
 			var xhr = new XMLHttpRequest();
-			xhr.open('POST', 'http://localhost:5000/authorise.html');
+			xhr.open('POST', '/authorise.html');
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 			xhr.onload = function() {
  				 console.log('Signed in as: ' + xhr.responseText);

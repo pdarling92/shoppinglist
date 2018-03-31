@@ -1,19 +1,27 @@
+
+
 from flask import Flask, request, make_response, redirect
 from flask import render_template
 import json
 import uuid
 from common import loadlist, savelist, returnindex, updateitem, validate_token
 
+
+from google.oauth2 import id_token
+from google.auth.transport import requests
+
+
+
 app = Flask(__name__)
-CLIENT_ID="322716948446-jjiki9vlg8j5rontfumc9o246es0c0da.apps.googleusercontent.com"
-			
+CLIENT_ID="915555552081-gat5pr89plv84pjhbr5f6ind991t95bl.apps.googleusercontent.com"
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/list.html',methods=['GET', 'POST'])
 def shoppinglist():
     user = {'username': 'alex'}
-
+    username=""
     edititem=None
-
+	
     shoppinglist=loadlist('list.json',user['username'])
 
     if 'session_token' in request.cookies:
