@@ -4,11 +4,8 @@ from flask import Flask, request, make_response, redirect
 from flask import render_template
 import json
 import uuid
-from common import loadlist, savelist, returnindex, updateitem, validate_token, check_tokeninfo
+from common import loadlist, savelist, returnindex, updateitem, check_tokeninfo
 
-
-from google.oauth2 import id_token
-from google.auth.transport import requests
 
 
 
@@ -26,8 +23,7 @@ def shoppinglist():
 
     if 'session_token' in request.cookies:
         print request.cookies['session_token']
-        print validate_token( request.cookies['session_token'],CLIENT_ID)
-	token, userid, username,  authorised = validate_token( request.cookies['session_token'],CLIENT_ID)
+	token, userid, username,  authorised = check_tokeninfo( request.cookies['session_token'] )
     else:
 	print "not authenticated"
 	authorised=False

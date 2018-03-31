@@ -1,7 +1,5 @@
 
 import json
-from google.oauth2 import id_token
-from google.auth.transport import requests
 import logging
 import urllib2
 
@@ -30,29 +28,29 @@ def updateitem(shoppinglist, itemid, newvalue):
         return shoppinglist
 
 
-def validate_token(token, CLIENT_ID):
-        authorised=False
-        try:
-                # Specify the CLIENT_ID of the app that accesses the backend:
-                idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+#def validate_token(token, CLIENT_ID):
+#        authorised=False
+#        try:
+#                # Specify the CLIENT_ID of the app that accesses the backend:
+#                idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+#
+#
+#                if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+#                        raise ValueError('Wrong issuer.')
+#                print idinfo
+#
+#                userid = idinfo['sub']
+#                username = idinfo['given_name']
+#                authorised=True
 
+#        except ValueError:
+#        # Invalid token
+#                print "not authorised"
+#                userid=None
+#                username=None
+#                return idinfo 
 
-                if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-                        raise ValueError('Wrong issuer.')
-                print idinfo
-
-                userid = idinfo['sub']
-                username = idinfo['given_name']
-                authorised=True
-
-        except ValueError:
-        # Invalid token
-                print "not authorised"
-                userid=None
-                username=None
-                return idinfo 
-
-        return token, userid, username, authorised
+#        return token, userid, username, authorised
 
 def check_tokeninfo(token):
 	URL="https://www.googleapis.com/oauth2/v3/tokeninfo"
