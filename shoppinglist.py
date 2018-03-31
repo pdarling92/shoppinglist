@@ -4,7 +4,7 @@ from flask import Flask, request, make_response, redirect
 from flask import render_template
 import json
 import uuid
-from common import loadlist, savelist, returnindex, updateitem, validate_token
+from common import loadlist, savelist, returnindex, updateitem, validate_token, check_tokeninfo
 
 
 from google.oauth2 import id_token
@@ -71,7 +71,7 @@ def login():
 def authorise():
     token=request.form['idtoken']
 #    token="x"
-    token, userid, username, authorised = validate_token(token, CLIENT_ID)
+    token, userid, username, authorised = check_tokeninfo(token)
 
     if authorised:
         response = make_response(redirect('/list.html'))
